@@ -1,0 +1,12 @@
+<div class = "profile">
+    Halo, {{ user.name }}
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td></td>
+                <td><button type="submit" name="page_switch" value="to_logout">Logout</button></td>
+            </tr>
+        </table>  
+    </form>
+</div>
