@@ -1,0 +1,23 @@
+<div class = "profile">
+    <h1>Editing {{ user.username }}'s Information Data...</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td></td>
+                <td></td>
+                <td><h3>Choose to Edit</h3></td>
+            </tr>
+                <td></td>
+                <td><button type="submit" name="page_switch" value="edit_email">Edit Email</button></td>
+                <td><button type="submit" name="page_switch" value="edit_phone_number">Edit Nomor Telepon</button></td>
+                <td><button type="submit" name="page_switch" value="edit_password">Edit Password</button></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td><button type="submit" name="page_switch" value="to_cancel">Cancel</button></td>
+            </tr>
+        </table>  
+    </form>
+</div>

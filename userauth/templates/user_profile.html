@@ -1,11 +1,30 @@
 <div class = "profile">
-    Halo, {{ user.name }}
+    <h1>Halo, {{ user.username }}</h1>
     <form method="POST">
         {% csrf_token %}
         <table>
             <tr>
+                <td><h3>About User</h3></td>
+            </tr>
+            <tr>
+                <td>Nama:</td>
+                <td>{{ user.name }}</td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td>Contact Number:</td>
+                <td>{{ user.phone_number }}</td>
+            </tr>
+            <tr>
                 <td></td>
                 <td><button type="submit" name="page_switch" value="to_logout">Logout</button></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="submit" name="page_switch" value="to_edit">Edit Profile</button></td>
             </tr>
         </table>  
     </form>

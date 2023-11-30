@@ -20,5 +20,21 @@ class LoginForm(AuthenticationForm):
         widgets = {
             'password':forms.PasswordInput()
         }
-    # username = forms.CharField(label='Username')
-    # password = forms.CharField(label='Password', widget=forms.PasswordInput)
+
+class EditEmailForm(forms.ModelForm):
+    class Meta:
+        model = UserDataModel
+        fields = ['email']
+
+class EditPhoneNumberForm(forms.ModelForm):
+    class Meta:
+        model = UserDataModel
+        fields = ['phone_number']
+
+class EditPasswordForm(forms.ModelForm):
+    class Meta:
+        model = UserDataModel
+        fields = ['password']
+        widgets = {
+            'password':forms.PasswordInput()
+        }

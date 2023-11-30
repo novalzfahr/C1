@@ -11,4 +11,4 @@ class UserDataModel(AbstractUser):
     role = models.CharField(max_length=9, choices=ROLES, default='pelanggan')
     name = models.CharField(max_length=100, default='NewUser')
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    phone_number = models.CharField(unique=True, max_length=15, blank=True, null=True)
