@@ -61,7 +61,7 @@ def register(request):
                 print('success')
                 return redirect('userauth:userauth_home')
             except ValueError:
-                messages.info("Name cannot be empty")
+                messages.info("Pastikan kembali data isian benar")
     
     context = {
         'form':form
