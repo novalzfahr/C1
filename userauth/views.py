@@ -1,9 +1,9 @@
 # ---- Django Imports ----
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core import serializers
 from datetime import datetime
@@ -38,11 +38,14 @@ def userauth_home(request):
             try:
                 user = UserDataModel.objects.get(username=username, password=password)
                 login(request, user)
-                return redirect('userauth:userauth_home')
+                next_page = request.POST.get('next')
+                if next_page:
+                    return redirect(next_page)
+                return redirect('userauth:profile')
             except:
                 messages.info(request, 'Username atau Password salah!')
-        elif button_press == 'to_logout':
-            return logout(request)
+        # elif button_press == 'to_logout':
+        #     return logout(request)
     
     return render(request, 'userauth_home.html', context)
 
@@ -82,5 +85,22 @@ def logout(requested):
 
 
 # ---- User Account Details Related Methods ----
+@login_required(login_url='/userauth/')
 def show_profile(request):
     current_user = UserDataModel.objects.get(id=request.user.id)
+    context = {
+        'user':current_user
+    }
+
+    if request.method == 'POST':
+        button_press = request.POST.get('page_switch')
+        if button_press == 'to_logout':
+            return logout(request)
+        
+    return render(request, 'user_profile.html', context)
+
+def edit_profile_page(request):
+    pass
+
+def edit_password(request):
+    pass
