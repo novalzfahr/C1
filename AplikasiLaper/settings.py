@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'userauth',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'AplikasiLaper.wsgi.application'
 
+
+# Custom User Model
+
+AUTH_USER_MODEL = 'userauth.UserDataModel'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

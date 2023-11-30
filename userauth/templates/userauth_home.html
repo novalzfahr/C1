@@ -1,0 +1,36 @@
+<div class = "home">
+    
+    <h1>Hello</h1>  
+
+        {% comment %} name = identifier, value = label {% endcomment %}
+        <form method="POST">
+            {% csrf_token %}
+            <table>  
+                {{ form.as_table }}  
+                <tr>  
+                    <td></td>
+                    <td><button type="submit" name="register_or_login" value="to_login">Login</button></td>  
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button type="submit" name="register_or_login" value="to_register">Registrasi</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button type="submit" name="register_or_login" value="to_logout">Logout</button></td>
+                </tr>
+            </table>  
+        </form>
+
+    {% if messages %}  
+        <ul>   
+            {% for message in messages %}  
+                <li>{{ message }}</li>  
+                {% endfor %}  
+        </ul>   
+    {% endif %}
+
+    <h2>Now Logged In: {{ logged_in }}</h2>
+    <h2>Other Users: {{ user_list }}</h2>
+
+</div>  
