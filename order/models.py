@@ -10,14 +10,14 @@ class Promo(models.Model):
     masa_berlaku = models.DateField()
 
 class Item(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    nama_item = models.CharField(max_length=200, primary_key=True)
+    ID_item = models.CharField(max_length=200,primary_key=True, default= 0)
+    user = models.CharField(max_length=200, default="")
+    nama_item = models.CharField(max_length=200, default="")
     harga = models.FloatField(default=0)
-    kuantitas = models.IntegerField(default=0)
+    kuantitas = models.IntegerField(default=1)
 
 class Menu(models.Model):
     ID_menu = models.CharField(max_length=200, primary_key=True)
     nama = models.CharField(max_length=200)
     deskripsi = models.TextField(max_length=None)
     harga = models.FloatField(default=0)
-    promo = models.ForeignKey(Promo, on_delete=models.CASCADE)
