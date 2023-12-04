@@ -159,15 +159,59 @@ def edit_email(request):
 
 @login_required(login_url='/userauth/')
 def edit_phone_number(request):
-    pass
+    form = EditPhoneNumberForm()
+    if request.method == 'POST':
+        if request.POST.get('submit') == 'to_cancel':
+                return redirect('userauth:profile_page')
+
+        current_user = request.user
+        new_phone_number = request.POST.get('phone_number')
+        try:
+            print(current_user.phone_number, new_phone_number)
+            if current_user.phone_number == new_phone_number:
+                messages.info(request, "Nomor baru sama dengan nomor yang sedang digunakan")
+            else:
+                UserDataModel.objects.get(phone_number=new_phone_number)
+                messages.info(request, "Nomor telepon sudah digunakan")
+        except:
+            # TODO : make a way to connect this to otp_page
+            form = EditPhoneNumberForm(request.POST, instance=current_user)
+            if form.is_valid():
+                form.save()
+                return redirect('userauth:profile_page')
+    context = {
+        'form':form
+    }
+    return render(request, 'edit_phone_number_page.html', context)
 
 @login_required(login_url='/userauth/')
 def edit_password(request):
-    pass
+    form = EditPasswordForm()
+    if request.method == 'POST':
+        if request.POST.get('submit') == 'to_cancel':
+                return redirect('userauth:profile_page')
+
+        current_user = request.user
+        new_password = request.POST.get('password')
+        try:
+            print(current_user.password, new_password)
+            if current_user.password == new_password:
+                messages.info(request, "Password baru sama dengan password yang sedang digunakan")
+        except:
+            # TODO : make a way to connect this to otp_page
+            form = EditPasswordForm(request.POST, instance=current_user)
+            if form.is_valid():
+                form.save()
+                return redirect('userauth:profile_page')
+    context = {
+        'form':form
+    }
+    return render(request, 'edit_password_page.html', context)
 
 
 
 # ---- OTP Related Methods ----
+# For now, will not be used because it requires us to pay $0.5 a month which isn't much but I'd rather wait till we actually need to present the code (might cause a disaster LOL).
 def OTP_manager(media='', address=''):
     char_choices = string.ascii_uppercase + string.digits
     otp = ''.join(random.choices(char_choices, k=6))
