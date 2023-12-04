@@ -6,7 +6,7 @@ from django.db.utils import OperationalError
 from userauth.models import UserDataModel
 import json
 from django.core import serializers
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.generic.edit import CreateView
@@ -36,27 +36,25 @@ def read_feedback(request):
                    'exist': exist}
         return render(request, 'read_feedback.html', context)
 
-# @csrf_exempt
-# @login_required(login_url='/userauth/')
-# def create_feedback(request):
-#     if request.method == 'GET':
-#         return render(request, 'create_feedback.html')
-#     elif request.method == 'POST':
-#         data = json.loads(request.body)
-#         feedback = Feedback.objects.create(
-#             user=request.user,
-#             message=data['message'],
-#             date_created=datetime.now()
-#         )
-#         return render(request, 'create_feedback.html', {'feedback': feedback})
+@login_required(login_url='/userauth/')
+def create_feedback(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            feedback.user = request.user
+            feedback.save()
+            return redirect('/feedback/')
+    else:
+        form = FeedbackForm()
+    return render(request, 'create_feedback.html', {'form': form})
 
+# class create_feedback(LoginRequiredMixin, CreateView):
+#     model = Feedback
+#     form_class = FeedbackForm
+#     template_name = 'create_feedback.html'
+#     success_url = '/feedback/'
 
-class create_feedback(LoginRequiredMixin, CreateView):
-    model = Feedback
-    form_class = FeedbackForm
-    template_name = 'create_feedback.html'
-    success_url = '/feedback/'
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         form.instance.user = self.request.user
+#         return super().form_valid(form)
