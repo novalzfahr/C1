@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 8px;
+            width: 300px;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+    <script>
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        setTimeout(function() {
+        var messages = document.getElementsByClassName('messages');
+        if (messages.length > 0) {
+            messages[0].style.display = 'block';
+
+            // Menghilangkan pesan setelah 1 detik
+            setTimeout(function() {
+                messages[0].style.display = 'none';
+            }, 1000);
+        }
+    }, 1000);
+    </script>
+</head>
+<body>
+    <div class="text-center">
+        <h1>Menu Restoran Enak</h1>
+    </div>
+    <div class="d-flex justify-content-center flex-row">
+        <div class="card-container">
+            {% for item in menu %}
+            <div class="card">
+                <h3>{{ item.nama }}</h3>
+                <p><strong>Deskripsi:</strong> {{ item.deskripsi }}</p>
+                <p><strong>Harga:</strong> {{ item.harga }}</p>
+                <form action="{% url 'order:add_menu_to_cart' item.ID_menu %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Tambah ke Keranjang</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <div class="text-center mt-2">
+        <a href="/order/cart" class="btn btn-success">Lihat Keranjang</a>
+    </div>
+</body>
+</html>

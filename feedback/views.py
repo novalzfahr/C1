@@ -2,40 +2,61 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .models import Feedback
-from .forms import FeedbackForm
 from django.db.utils import OperationalError
+from userauth.models import UserDataModel
+import json
+from django.core import serializers
+from django.shortcuts import render
+from django.http import JsonResponse
+from datetime import datetime
+from django.views.generic.edit import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Feedback
+from .forms import FeedbackForm
 
-
-def feedback_view(request):
-	feedbacks = feedback.objects.all()
-	feedabacks_data = list(map(serialize_feedbacks, medicines))
-	return JsonResponse(medicines_data, safe=False)
-	
-def serialize_feedbacks(feedaback):
-	obj = {}
-	obj['pk'] = feedaback.pk
-	obj['fields'] = {}
-	obj['fields']['name'] = medicine.name
-	obj['fields']['stock'] = medicine.stock
-	return obj
-
-@csrf_exempt
-# @login_required
-def feedback_create(request):
-    if request.method == 'POST':
-        form = FeedbackForm(request.POST)
-        if form.is_valid():
-            feedback = form.save(commit=False)
-            feedback.pelanggan = request.user
-            feedback.save()
-            return JsonResponse({'success': True})
+@login_required(login_url='/userauth/')
+def read_feedback(request):
+    current_user = UserDataModel.objects.get(id=request.user.id)
+    if current_user.role == 'admin':
+        feedbacks = Feedback.objects.all()
+        if feedbacks.count() == 0:
+            exist = False
         else:
-            return JsonResponse({'success': False, 'errors': form.errors})
-    else:
-        form = FeedbackForm()
+            exist = True
+        context = {'feedbacks': feedbacks,
+                   'exist': exist}
+        return render(request, 'read_feedback.html', context)
+    if current_user.role == 'pelanggan':
+        feedbacks = Feedback.objects.filter(user=request.user)
+        if feedbacks.count() == 0:
+            exist = False
+        else:
+            exist = True
+        context = {'feedbacks': feedbacks,
+                   'exist': exist}
+        return render(request, 'read_feedback.html', context)
 
-    context = {
-        'form': form
-    }
-    return JsonResponse(context)
+# @csrf_exempt
+# @login_required(login_url='/userauth/')
+# def create_feedback(request):
+#     if request.method == 'GET':
+#         return render(request, 'create_feedback.html')
+#     elif request.method == 'POST':
+#         data = json.loads(request.body)
+#         feedback = Feedback.objects.create(
+#             user=request.user,
+#             message=data['message'],
+#             date_created=datetime.now()
+#         )
+#         return render(request, 'create_feedback.html', {'feedback': feedback})
 
+
+class create_feedback(LoginRequiredMixin, CreateView):
+    model = Feedback
+    form_class = FeedbackForm
+    template_name = 'create_feedback.html'
+    success_url = '/feedback/'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
