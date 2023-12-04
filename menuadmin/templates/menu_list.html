@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Menu List</h2>
+  <a href="{% url 'menu_create' %}">Create New Item</a>
+  <ul class="menu-list">
+    {% for item in items %}
+      <li class="menu-item">
+        {{ item.name }} - {{ item.description }} - ${{ item.price }}
+        <div class="menu-actions">
+          <a href="{% url 'menu_update' item.pk %}">Edit</a> |
+          <a href="#" class="delete-link" data-pk="{{ item.pk }}">Delete</a>
+          <div class="confirm-delete" data-target="{{ item.pk }}">
+            Are you sure?
+            <a href="{% url 'menu_delete' item.pk %}">Yes</a> |
+            <span class="cancel">No</span>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .menu-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .menu-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+  }
+
+  .menu-actions {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  .confirm-delete {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    right: 0;
+    top: 20px;
+    z-index: 100;
+  }
+
+  .delete-link:hover + .confirm-delete {
+    display: block;
+  }
+
+  .cancel:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .delete-link {
+    color: red;
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var cancelButtons = document.querySelectorAll('.cancel');
+    cancelButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        var confirmDelete = button.closest('.confirm-delete');
+        confirmDelete.style.display = 'none';
+      });
+    });
+  });
+</script>
+{% endblock %}
