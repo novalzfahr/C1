@@ -74,7 +74,7 @@ def register(request):
     }
     return render(request, 'register.html', context)
 
-def logout(requested):
+def logout(request):
     '''
     
     How to use in other methods:
@@ -86,8 +86,8 @@ def logout(requested):
     
     '''
 
-    requested.session.flush()
-    requested.session.clear_expired()
+    request.session.flush()
+    request.session.clear_expired()
     return redirect('userauth:userauth_home')
 
     # # Reminder :coba setting session expire # settings.py
