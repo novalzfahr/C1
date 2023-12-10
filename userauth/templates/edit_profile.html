@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 <div class = "profile">
     <h1>Editing {{ user.username }}'s Information Data...</h1>
     <form method="POST">
@@ -21,3 +24,4 @@
         </table>  
     </form>
 </div>
+{% endblock content %}
