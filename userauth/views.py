@@ -61,13 +61,16 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            try:
-                form.save()
-                messages.success(request, 'Akun telah berhasil dibuat!')
-                print('success')
-                return redirect('userauth:userauth_home')
-            except ValueError:
-                messages.info(request, "Pastikan kembali data isian benar")
+            if request.POST.get('password_confirm') == request.POST.get('password'):
+                try:
+                    form.save()
+                    messages.success(request, 'Akun telah berhasil dibuat!')
+                    print('success')
+                    return redirect('userauth:userauth_home')
+                except ValueError:
+                    messages.info(request, "Pastikan kembali data isian benar")
+            else:
+                messages.info(request, 'Password tidak sama!')
     
     context = {
         'form':form
@@ -193,16 +196,20 @@ def edit_password(request):
 
         current_user = request.user
         new_password = request.POST.get('password')
-        try:
-            print(current_user.password, new_password)
-            if current_user.password == new_password:
-                messages.info(request, "Password baru sama dengan password yang sedang digunakan")
-        except:
+        print(current_user.password, new_password)
+        if current_user.password == new_password:
+            messages.info(request, "Password baru sama dengan password yang sedang digunakan")
+        else:
             # TODO : make a way to connect this to otp_page
             form = EditPasswordForm(request.POST, instance=current_user)
             if form.is_valid():
-                form.save()
-                return redirect('userauth:profile_page')
+                if request.POST.get('password_confirm') == request.POST.get('password'):
+                    form.save()
+                    new_login = UserDataModel.objects.get(username=current_user.username, password=new_password)
+                    login(request, new_login)
+                    return redirect('userauth:profile_page')
+                else:
+                    messages.info(request, 'Password tidak sama!')
     context = {
         'form':form
     }
