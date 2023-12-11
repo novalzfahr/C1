@@ -1,8 +1,9 @@
-
-
-    <h2>Create Promotion</h2>
-    <form method="post" action="{% url 'create_promo' %}">
+{% extends 'base.html' %}
+{% block content %}
+    <h2>{% if form.instance.ID_promo %}Edit{% else %}Create{% endif %} Promotion</h2>
+    <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Create Promo</button>
     </form>
+{% endblock %}

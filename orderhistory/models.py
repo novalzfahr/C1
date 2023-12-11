@@ -1,6 +1,7 @@
 from django.db import models
 from userauth.models import UserDataModel
 
+
 # class DataPembayaran(models.Model):
     # Define fields for payment data
     # ...\
