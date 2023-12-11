@@ -1,18 +1,18 @@
 # ---- Django Imports ----
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from django.http import HttpResponseRedirect
+# from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core import serializers
 
 # ---- Py Package Imports ----
-from twilio.rest import Client
-from datetime import datetime
-import smtplib
-import random
-import string
+# from twilio.rest import Client
+# from datetime import datetime
+# import smtplib
+# import random
+# import string
 
 # ---- App Imports ----
 from .forms import RegistrationForm, LoginForm, EditEmailForm, EditPhoneNumberForm, EditPasswordForm
@@ -217,49 +217,51 @@ def edit_password(request):
 
 
 
-# ---- OTP Related Methods ----
-# For now, will not be used because it requires us to pay $0.5 a month which isn't much but I'd rather wait till we actually need to present the code (might cause a disaster LOL).
-def OTP_manager(media='', address=''):
-    char_choices = string.ascii_uppercase + string.digits
-    otp = ''.join(random.choices(char_choices, k=6))
+'''
+---- OTP Related Methods ----
+For now, will not be used because it requires us to pay $0.5 a month which isn't much but I'd rather wait till we actually need to present the code (unfortunately, might cause a disaster).
+'''
+# def OTP_manager(media='', address=''):
+#     char_choices = string.ascii_uppercase + string.digits
+#     otp = ''.join(random.choices(char_choices, k=6))
 
-    if media == 'email':
-        sender_email = 'aplikasilaper@example.com'
-        sender_password = 'tugaskelompokrplc1'
+#     if media == 'email':
+#         sender_email = 'aplikasilaper@example.com'
+#         sender_password = 'tugaskelompokrplc1'
 
-        subject = 'Your One-Time Password (OTP)'
-        body = f'Your OTP is: {otp}'
+#         subject = 'Your One-Time Password (OTP)'
+#         body = f'Your OTP is: {otp}'
 
-        message = f'Subject: {subject}\n\n{body}'
+#         message = f'Subject: {subject}\n\n{body}'
 
-        try:
-            with smtplib.SMTP('smtp.example.com', 587) as server:  # Replace with your SMTP server and port
-                server.starttls()
-                server.login(sender_email, sender_password)
-                server.sendmail(sender_email, address, message)
-            print('Email sent successfully!')
-        except Exception as e:
-            print(f'Error: {e}')
+#         try:
+#             with smtplib.SMTP('smtp.example.com', 587) as server:  # Replace with your SMTP server and port
+#                 server.starttls()
+#                 server.login(sender_email, sender_password)
+#                 server.sendmail(sender_email, address, message)
+#             print('Email sent successfully!')
+#         except Exception as e:
+#             print(f'Error: {e}')
 
-    elif media == 'sms':
-        account_sid = 'your_account_sid'  # Replace with your Twilio account SID
-        auth_token = 'your_auth_token'  # Replace with your Twilio auth token
-        twilio_phone_number = 'your_twilio_phone_number'  # Replace with your Twilio phone number
+#     elif media == 'sms':
+#         account_sid = 'your_account_sid'  # Replace with your Twilio account SID
+#         auth_token = 'your_auth_token'  # Replace with your Twilio auth token
+#         twilio_phone_number = 'your_twilio_phone_number'  # Replace with your Twilio phone number
 
-        client = Client(account_sid, auth_token)
-        try:
-            message = client.messages.create(
-                body=f'Your OTP is: {otp}',
-                from_=twilio_phone_number,
-                to=address
-            )
-            print('SMS sent successfully!')
-            print(f'Message SID: {message.sid}')
-        except Exception as e:
-            print(f'Error: {e}')
+#         client = Client(account_sid, auth_token)
+#         try:
+#             message = client.messages.create(
+#                 body=f'Your OTP is: {otp}',
+#                 from_=twilio_phone_number,
+#                 to=address
+#             )
+#             print('SMS sent successfully!')
+#             print(f'Message SID: {message.sid}')
+#         except Exception as e:
+#             print(f'Error: {e}')
 
 
 
-@login_required(login_url='/userauth/')
-def otp_page(request):
-    return render(request, 'otp_page.html')
+# @login_required(login_url='/userauth/')
+# def otp_page(request):
+#     return render(request, 'otp_page.html')
