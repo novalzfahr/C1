@@ -1,10 +1,73 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Are you sure you want to delete "{{ item.nama }}"?</h2>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit">Confirm Delete</button>
-    <a href="{% url 'menu_list' %}">Cancel</a>
-  </form>
+<style>
+    h2 {
+        text-align: center;
+        color: #000000;
+        margin-top: 20px;
+    }
+
+    form {
+        max-width: 300px;
+        margin: 30px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    button[type="submit"] {
+        padding: 10px 15px;
+        background-color: #dc3545; /* Red color for delete action */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 10px; /* Space between button and link */
+        transition: background-color 0.3s;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #bd2130;
+    }
+
+    a {
+        padding: 10px 15px;
+        background-color: #ffffff; /* Grey color for cancel action */
+        color: white;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+    a:hover {
+        background-color: #5a6268;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #000000;
+    }
+</style>
+
+<h2>Are you sure you want to delete "{{ item.nama }}"?</h2>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Confirm Delete</button>
+  <a href="{% url 'menu_list' %}" class="btn">Cancel</a>
+</form>
 {% endblock %}
