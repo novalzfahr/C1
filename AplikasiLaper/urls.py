@@ -22,4 +22,6 @@ urlpatterns = [
     path('', include('orderconfirmation.urls')),
     path('', include('orderhistory.urls')),
     path('', include('promo.urls')),
+    path('feedback/', include('feedback.urls')),
+    path('order/', include('order.urls')),
 ]

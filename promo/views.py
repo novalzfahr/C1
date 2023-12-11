@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Promotion
+from order.models import Promo
 from .forms import PromotionForm
 
 def create_promo(request):
@@ -10,8 +10,8 @@ def create_promo(request):
                 # Processing promotion creation
                 form.save()
                 # Update menu price based on the promotion
-                update_menu_price(form.cleaned_data['menu'], form.cleaned_data['discount_amount'])
-                return render(request, 'promo_success.html')
+                # update_menu_price(form.cleaned_data['menu'], form.cleaned_data['discount_amount'])
+                return redirect('display_promo')
             except Exception as e:
                 return render(request, 'promo_error.html', {'error_message': str(e)})
     else:
@@ -19,6 +19,7 @@ def create_promo(request):
 
     return render(request, 'create_promo.html', {'form': form})
 
-def update_menu_price(menu, discount_amount):
-    menu.price -= discount_amount
-    menu.save()
+
+def display_promo(request):
+    promo = Promo.objects.all()
+    return render(request, 'promo_list.html', {'promo': promo}) 

@@ -1,7 +1,10 @@
 from django import forms
-from .models import Promotion
+from order.models import Promo
 
 class PromotionForm(forms.ModelForm):
     class Meta:
-        model = Promotion
-        fields = ['menu', 'discount_amount', 'start_time', 'end_time']
+        model = Promo
+        fields = ['ID_promo', 'nama_promo', 'deskripsi_promo', 'diskon_promo', 'masa_berlaku']
+        widgets = {
+            'masa_berlaku': forms.DateInput(attrs={'type': 'date'}),
+        }

@@ -15,10 +15,10 @@
                     <td></td>
                     <td><button type="submit" name="register_or_login" value="to_register">Registrasi</button></td>
                 </tr>
-                <tr>
+                {% comment %} <tr>
                     <td></td>
                     <td><button type="submit" name="register_or_login" value="to_logout">Logout</button></td>
-                </tr>
+                </tr> {% endcomment %}
             </table>  
         </form>
 
@@ -31,6 +31,6 @@
     {% endif %}
 
     <h2>Now Logged In: {{ logged_in }}</h2>
-    <h2>Other Users: {{ user_list }}</h2>
+    {% comment %} <h2>Other Users: {{ user_list }}</h2> {% endcomment %}
 
 </div>  
