@@ -17,12 +17,12 @@ def read_menu(request):
     return render(request, 'order_home.html', context)
 
 def display_cart(request):
-    user = request.user
-    items = Item.objects.filter(user=user)
+    current_user = UserDataModel.objects.get(id=request.user.id)
+    items = Item.objects.filter(user=request.user)
     total = total_price(request)
     context = {
         'items': items,
-        'user': user,
+        'user': current_user,
         'total': total,
     }
     return render(request, 'cart.html', context)
@@ -31,7 +31,6 @@ def add_menu_to_cart(request, menu_id):
     if request.method == 'POST':
         menu = Menu.objects.get(ID_menu=menu_id)
         user = request.user
-        
         # Cek jika item sudah ada di cart untuk user saat ini
         try:
             item = Item.objects.get(user=user, nama_item=menu.nama)
@@ -72,16 +71,18 @@ def change_item_quantity(request, item_id, quantity_change):
     # Change the item quantity based on the provided value
     if quantity_change == '1':
         item.kuantitas += 1
-    elif quantity_change == '-1' and item.kuantitas > 0:
-        item.kuantitas -= 1
-        if item.kuantitas == 0:
-            item.kuantitas = 1
-            messages.warning(request, f"{item.nama_item} cannot zero.")
+        messages.success(request, f"{item.nama_item} quantity increased.")
+    elif quantity_change == '-1':
+        if item.kuantitas > 1:  # Only decrease if quantity is greater than 1
+            item.kuantitas -= 1
+            messages.success(request, f"{item.nama_item} quantity decreased.")
+        else:
+            messages.warning(request, f"{item.nama_item} cannot be zero, you can delete it instead.")
+
     item.save()
     
     return HttpResponseRedirect('/order/cart')
 
-    # return redirect('order:display_cart')
 
 def total_price(request):
     user = request.user
