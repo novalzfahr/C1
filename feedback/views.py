@@ -13,6 +13,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Feedback
 from .forms import FeedbackForm
+from django.shortcuts import get_object_or_404
 
 @login_required(login_url='/userauth/')
 def read_feedback(request):
@@ -23,8 +24,10 @@ def read_feedback(request):
             exist = False
         else:
             exist = True
+        admin = True
         context = {'feedbacks': feedbacks,
-                   'exist': exist}
+                   'exist': exist,
+                   'admin': admin}
         return render(request, 'read_feedback.html', context)
     if current_user.role == 'pelanggan':
         feedbacks = Feedback.objects.filter(user=request.user)
@@ -32,10 +35,13 @@ def read_feedback(request):
             exist = False
         else:
             exist = True
+        admin = False
         context = {'feedbacks': feedbacks,
-                   'exist': exist}
+                   'exist': exist,
+                   'admin': admin}
         return render(request, 'read_feedback.html', context)
 
+@csrf_exempt
 @login_required(login_url='/userauth/')
 def create_feedback(request):
     if request.method == 'POST':
@@ -49,12 +55,13 @@ def create_feedback(request):
         form = FeedbackForm()
     return render(request, 'create_feedback.html', {'form': form})
 
-# class create_feedback(LoginRequiredMixin, CreateView):
-#     model = Feedback
-#     form_class = FeedbackForm
-#     template_name = 'create_feedback.html'
-#     success_url = '/feedback/'
+@login_required(login_url='/userauth/')
+def delete_feedback(request, feedback_id):
+    feedback = get_object_or_404(Feedback, id=feedback_id, user=request.user)
+    
+    if request.method == 'POST':
+        feedback.delete()
+        return redirect('feedback:read_feedback')
 
-#     def form_valid(self, form):
-#         form.instance.user = self.request.user
-#         return super().form_valid(form)
+    # Handle the case where the user accesses the delete page directly
+    return HttpResponseBadRequest("Bad Request")
