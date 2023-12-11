@@ -108,24 +108,6 @@ def checkout(request):
     }
     return render(request, 'checkout.html', context)
 
-# @login_required(login_url='userauth:userauth_home')
-# def create_order(request):
-#     user = request.user
-#     items = Item.objects.filter(user=user)
-#     total = total_price(request)
-#     if request.method == 'POST':
-#         if request.POST.get('submit') == 'to_cancel':
-#             return redirect('order:display_cart')
-#         elif request.POST.get('submit') == 'to_checkout':
-#             for item in items:
-#                 item.delete()
-#             return redirect('order:display_cart')
-#     context = {
-#         'items': items,
-#         'user': user,
-#         'total': total,
-#     }
-#     return render(request, 'checkout.html', context)
 
 def total_price(request):
     user = request.user
@@ -134,9 +116,4 @@ def total_price(request):
     total = 0
     for item in items:
         total += item.harga*item.kuantitas
-    
-    try:
-        total = total - total*promo[0].diskon_promo
-    except Promo.DoesNotExist:
-        pass
     return total

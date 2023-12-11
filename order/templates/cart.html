@@ -82,6 +82,7 @@
         <label for="payment-option">Pilih Promo:</label>
         <div class="d-flex justify-content-center">
             <select id="payment-option" name="payment-option" class="form-select">
+                <option value="blank"></option>
                 {% for list in promo %}
                 <option value="{{list.ID_promo}}">{{list.nama_promo}}</option>
                 {% endfor %}
@@ -93,6 +94,7 @@
         <label for="payment-option">Pilih Metode Pembayaran:</label>
         <div class="d-flex justify-content-center">
             <select id="payment-option" name="payment-option" class="form-select">
+                <option value="blank"></option>
                 <option value="bank">Bank</option>
                 <option value="digital-wallet">Dompet Digital</option>
             </select>
