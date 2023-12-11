@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+<style>
+    .box {
+        width: 300px;
+        height: 270px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: -100px;
+    }
+    .gradient-bg {
+        background: linear-gradient(to bottom, #FFE230, #6DD5FA); /* Replace with your preferred colors */
+    }
+    big-logo {
+        width: 80px; /* Set your preferred width */
+        height: auto; /* Maintain aspect ratio */
+    }
+</style>
+{% endblock meta %}
+
+{% block content %}
+<div class="container-fluid position-fixed vh-100 overflow-auto gradient-bg d-flex justify-content-center align-items-center">
+    <img src="{% static "img/laper.png" %}" alt="nav-logo">
+    <div class="box">
+        <h1>
+            Welcome to Laper {% if logged_in.role == 'admin' %}<span class="text-danger">Admin!</span>{% endif %}
+        </h1>
+        <p>Now wandering as : {{ logged_in }}</p>
+        <!-- Add more content or elements inside the box as needed -->
+        {% if logged_in.role == 'admin' %}
+            <a href="/menuadmin/menu/" class="btn btn-danger">Pergi ke Menu Admin</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+<head>
+    <title>orders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<style>
+    .title {
+        margin-top: 50px;
+        margin-left: 50px;
+        margin-bottom: 50px;
+        font-size: 36px;
+        font-weight: 500;
+        text-align: center;
+    }
+</style>
+{% endblock meta %}
+{% block content %}
+<body>
+    {% if exist %}
+    <h1 class="title">orders</h1>
+
+    <div id="container" class="row row-cols-3 g-4 mx-4 mb-4">
+        {% for data in orders %}
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-2">order</h5>
+                    <p class="card-text">total: <span>{{data.total_harga}}</span></p>
+                    <p class="card-text">promo: <span>{{data.promo_used}}</span></p>
+                    <p class="card-text">status: <span>{{data.status}}</span></p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <button class="btn btn-primary mt-3 mx-auto d-block" onclick="location.href ='/order/'">Buat order</button>
+    {% else %}
+    <h1 class="title">Belum ada order</h1>
+    <div class="flex justify-center">
+    </div>
+    <button class="btn btn-primary mt-3 mx-auto d-block" onclick="location.href ='/order/'">Buat order</button>
+    {% endif %}
+</body>
+{% endblock content %}

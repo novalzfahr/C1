@@ -4,25 +4,35 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from order.models import *
+from datetime import date
+from django.http import HttpResponseBadRequest
+from django.db import transaction
+from django.contrib import messages
 
 # Create your views here.
 @login_required(login_url='userauth:userauth_home')
 def read_menu(request):
-    user = request.user
-    menu = Menu.objects.all()
-    context = {
-        'menu': menu,
-        'user': user,
-    }
-    return render(request, 'order_home.html', context)
+    current_user = UserDataModel.objects.get(id=request.user.id)
+    if current_user.role == 'pelanggan':
+        user = request.user
+        menu = Menu.objects.all()
+        context = {
+            'menu': menu,
+            'user': user,
+        }
+        return render(request, 'order_home.html', context)
+    else:
+        return HttpResponseRedirect('/userauth/profile/')
 
 def display_cart(request):
     current_user = UserDataModel.objects.get(id=request.user.id)
     items = Item.objects.filter(user=request.user)
     total = total_price(request)
+    promo = Promo.objects.all()
     context = {
         'items': items,
         'user': current_user,
+        'promo': promo,
         'total': total,
     }
     return render(request, 'cart.html', context)
@@ -83,11 +93,73 @@ def change_item_quantity(request, item_id, quantity_change):
     
     return HttpResponseRedirect('/order/cart')
 
+@login_required(login_url='userauth:userauth_home')
+def checkout(request):
+    current_user = UserDataModel.objects.get(id=request.user.id)
+    items = Item.objects.filter(user=request.user)
+
+    if request.method == 'POST':
+        # Retrieve selected promo
+        selected_promo_id = request.POST.get('payment-option')
+        selected_promo = Promo.objects.get(ID_promo=selected_promo_id) if selected_promo_id else None
+
+        with transaction.atomic():
+            # Create a new order
+            new_order = Order.objects.create(total_harga=total_price(request), promo_used=bool(selected_promo), user=current_user)
+
+            # Associate items with the new order
+            for item in items:
+                new_order.items.add(item)
+
+            # Apply the selected promo if available
+            if selected_promo:
+                new_order.total_harga -= (new_order.total_harga * selected_promo.diskon_promo) / 100
+
+            # Save the order with associated items and promo
+            new_order.save()
+
+            # Clear the user's cart by deleting all items
+            items.delete()
+
+            messages.success(request, "Checkout successful. Your order has been placed.")
+
+            return HttpResponseRedirect('/order/')
+
+    promo = Promo.objects.all()
+
+    context = {
+        'items': items,
+        'user': current_user,
+        'promo': promo,
+        'total': total_price(request),
+    }
+
+    return render(request, 'checkout.html', context)
+
 
 def total_price(request):
     user = request.user
     items = Item.objects.filter(user=user)
+    promo = Promo.objects.all()
     total = 0
+
     for item in items:
-        total += item.harga*item.kuantitas
+        total += item.harga * item.kuantitas
+
     return total
+
+@login_required(login_url='/userauth/')
+def show_order(request):
+    current_user = UserDataModel.objects.get(id=request.user.id)
+    try:
+        orders = Order.objects.filter(user=current_user)
+        if orders.count() == 0:
+            exist = False
+        else:
+            exist = True
+    except:
+        exist = False
+    context = {'orders': orders,
+                'exist': exist
+                }
+    return render(request, 'order_history.html', context)
