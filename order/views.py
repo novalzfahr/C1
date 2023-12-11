@@ -8,21 +8,27 @@ from order.models import *
 # Create your views here.
 @login_required(login_url='userauth:userauth_home')
 def read_menu(request):
-    user = request.user
-    menu = Menu.objects.all()
-    context = {
-        'menu': menu,
-        'user': user,
-    }
-    return render(request, 'order_home.html', context)
+    current_user = UserDataModel.objects.get(id=request.user.id)
+    if current_user.role == 'pelanggan':
+        user = request.user
+        menu = Menu.objects.all()
+        context = {
+            'menu': menu,
+            'user': user,
+        }
+        return render(request, 'order_home.html', context)
+    else:
+        return HttpResponseRedirect('/userauth/profile/')
 
 def display_cart(request):
     current_user = UserDataModel.objects.get(id=request.user.id)
     items = Item.objects.filter(user=request.user)
     total = total_price(request)
+    promo = Promo.objects.all()
     context = {
         'items': items,
         'user': current_user,
+        'promo': promo,
         'total': total,
     }
     return render(request, 'cart.html', context)
@@ -83,11 +89,54 @@ def change_item_quantity(request, item_id, quantity_change):
     
     return HttpResponseRedirect('/order/cart')
 
+@login_required(login_url='userauth:userauth_home')
+def checkout(request):
+    user = request.user
+    items = Item.objects.filter(user=user)
+    total = total_price(request)
+    if request.method == 'POST':
+        if request.POST.get('submit') == 'to_cancel':
+            return redirect('order:display_cart')
+        elif request.POST.get('submit') == 'to_checkout':
+            for item in items:
+                item.delete()
+            return redirect('order:display_cart')
+    context = {
+        'items': items,
+        'user': user,
+        'total': total,
+    }
+    return render(request, 'checkout.html', context)
+
+# @login_required(login_url='userauth:userauth_home')
+# def create_order(request):
+#     user = request.user
+#     items = Item.objects.filter(user=user)
+#     total = total_price(request)
+#     if request.method == 'POST':
+#         if request.POST.get('submit') == 'to_cancel':
+#             return redirect('order:display_cart')
+#         elif request.POST.get('submit') == 'to_checkout':
+#             for item in items:
+#                 item.delete()
+#             return redirect('order:display_cart')
+#     context = {
+#         'items': items,
+#         'user': user,
+#         'total': total,
+#     }
+#     return render(request, 'checkout.html', context)
 
 def total_price(request):
     user = request.user
     items = Item.objects.filter(user=user)
+    promo = Promo.objects.all()
     total = 0
     for item in items:
         total += item.harga*item.kuantitas
+    
+    # try:
+    #     total = total - total*promo[0].diskon
+    # except Promo.DoesNotExist:
+    #     pass
     return total
