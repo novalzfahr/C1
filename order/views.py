@@ -5,6 +5,9 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from order.models import *
 from datetime import date
+from django.http import HttpResponseBadRequest
+from django.db import transaction
+from django.contrib import messages
 
 # Create your views here.
 @login_required(login_url='userauth:userauth_home')
@@ -90,25 +93,67 @@ def change_item_quantity(request, item_id, quantity_change):
     
     return HttpResponseRedirect('/order/cart')
 
+# @login_required(login_url='userauth:userauth_home')
+# def checkout(request):
+#     user = request.user
+#     items = Item.objects.filter(user=user)
+#     total = total_price(request)
+#     if request.method == 'POST':
+#         if request.POST.get('submit') == 'to_cancel':
+#             return redirect('order:display_cart')
+#         elif request.POST.get('submit') == 'to_checkout':
+#             for item in items:
+#                 item.delete()
+#             return redirect('order:display_cart')
+#     context = {
+#         'items': items,
+#         'user': user,
+#         'total': total,
+#     }
+#     return render(request, 'checkout.html', context)
+
 @login_required(login_url='userauth:userauth_home')
 def checkout(request):
-    user = request.user
-    items = Item.objects.filter(user=user)
-    total = total_price(request)
+    current_user = UserDataModel.objects.get(id=request.user.id)
+    items = Item.objects.filter(user=request.user)
+
     if request.method == 'POST':
-        if request.POST.get('submit') == 'to_cancel':
-            return redirect('order:display_cart')
-        elif request.POST.get('submit') == 'to_checkout':
+        # Retrieve selected promo
+        selected_promo_id = request.POST.get('payment-option')
+        selected_promo = Promo.objects.get(ID_promo=selected_promo_id) if selected_promo_id else None
+
+        with transaction.atomic():
+            # Create a new order
+            new_order = Order.objects.create(total_harga=total_price(request), promo_used=bool(selected_promo))
+
+            # Associate items with the new order
             for item in items:
-                item.delete()
-            return redirect('order:display_cart')
+                new_order.items.add(item)
+
+            # Apply the selected promo if available
+            if selected_promo:
+                new_order.total_harga -= (new_order.total_harga * selected_promo.diskon_promo) / 100
+
+            # Save the order with associated items and promo
+            new_order.save()
+
+            # Clear the user's cart by deleting all items
+            items.delete()
+
+            messages.success(request, "Checkout successful. Your order has been placed.")
+
+            return HttpResponseRedirect('/order/')
+
+    promo = Promo.objects.all()
+
     context = {
         'items': items,
-        'user': user,
-        'total': total,
+        'user': current_user,
+        'promo': promo,
+        'total': total_price(request),
     }
-    return render(request, 'checkout.html', context)
 
+    return render(request, 'checkout.html', context)
 
 def total_price(request):
     user = request.user

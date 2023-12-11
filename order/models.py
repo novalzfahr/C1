@@ -34,7 +34,7 @@ class Menu(models.Model):
     harga = models.FloatField(default=0)
 
 class Order(models.Model):
-    items = models.ForeignKey(Item, on_delete=models.CASCADE)
+    items = models.ManyToManyField(Item)
     total_harga = models.FloatField()
     promo_used = models.BooleanField(default=False)
     # data_pembayaran = models.OneToOneField(DataPembayaran, on_delete=models.CASCADE)
