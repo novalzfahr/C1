@@ -28,7 +28,8 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title mb-2">Feedback</h5>
-                    <p class="card-text">Feedback: <span>{{data.message}}</span></p>
+                    <p class="card-text">Message: <span>{{data.message}}</span></p>
+                    <p class="card-text">Created at: <span>{{data.date_created}}</span></p> <!-- Added line -->
                     {% if not admin %}
                     <form method="post" action="{% url 'feedback:delete_feedback' data.id %}">
                         {% csrf_token %}
