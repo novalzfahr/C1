@@ -1,19 +1,21 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
 <head>
     <title>Keranjang dari {{user}}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .card {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 16px;
-            margin: 8px;
-            width: 300px;
-            display: inline-block;
-            vertical-align: top;
-        }
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 8px;
+        width: 300px;
+        display: inline-block;
+        vertical-align: top;
+    }
     </style>
+    
     <script>
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         // Delayed notification display after 1 second
@@ -30,9 +32,11 @@
     }, 1000);
     </script>
 </head>
+{% endblock meta %}
+{% block content %}
 <body>
     <div class="text-center">
-        <h1>Keranjang dari {{user}}</h1>
+        <h1>Keranjang dari {{user.name}}</h1>
     </div>
     <div class="d-flex justify-content-center flex-row">
         {% for item in items %}
@@ -74,4 +78,4 @@
         <a href="/order/" class="btn btn-success">Tambah Pesanan</a>
     </div>
 </body>
-</html>
+{% endblock content %}
