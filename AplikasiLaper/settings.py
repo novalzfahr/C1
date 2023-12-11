@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'userauth',
     'feedback',
     'order',
+    'menuadmin'
 ]
 
 MIDDLEWARE = [

@@ -21,4 +21,5 @@ urlpatterns = [
     path('userauth/', include('userauth.urls')),
     path('feedback/', include('feedback.urls')),
     path('order/', include('order.urls')),
+    path('menuadmin/', include('menuadmin.urls')),
 ]

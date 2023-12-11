@@ -1,0 +1,27 @@
+<!-- menu_list.html -->
+{% extends 'base.html' %}
+{% load static%}
+
+{% block content %}
+<h2>Daftar Menu</h2>
+<a href="{% url 'menu_create' %}">Tambah Menu Baru</a>
+<table>
+    <tr>
+        <th>Nama</th>
+        <th>Deskripsi</th>
+        <th>Harga</th>
+        <th>Aksi</th>
+    </tr>
+    {% for item in menu %}
+    <tr>
+        <td>{{ item.nama }}</td>
+        <td>{{ item.deskripsi }}</td>
+        <td>{{ item.harga }}</td>
+        <td>
+            <a href="{% url 'menu_update' item.pk %}">Edit</a> |
+            <a href="{% url 'menu_delete' item.pk %}">Hapus</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
