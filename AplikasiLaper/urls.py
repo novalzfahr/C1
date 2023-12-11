@@ -25,5 +25,6 @@ urlpatterns = [
     path('', include('promo.urls')),
     path('feedback/', include('feedback.urls')),
     path('order/', include('order.urls')),
+    path('menuadmin/', include('menuadmin.urls')),
     path('', main_page, name='main_page'),
 ]

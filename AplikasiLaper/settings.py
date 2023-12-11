@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'promo',
     'feedback',
     'order',
+    'menuadmin',
 ]
 
 MIDDLEWARE = [
