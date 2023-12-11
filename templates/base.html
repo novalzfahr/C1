@@ -57,7 +57,12 @@
                 <!-- <a class="nav-link p-4" href="/permintaan/request/" role="button" aria-haspopup="true" aria-expanded="false">Pesan</a> -->
                 <!-- </li> -->
                 <li class="nav-item">
-                <a class="nav-link p-4" href="/userauth/logout/" role="button" aria-haspopup="true" aria-expanded="false">Logout</a>
+                    {% comment %} <p>{{ request.user.id }}</p> {% endcomment %}
+                    {% if request.user.id is None %}
+                        <a class="nav-link p-4" href="/userauth/" role="button" aria-haspopup="true" aria-expanded="false">Login</a>
+                    {% else %}
+                        <a class="nav-link p-4" href="/userauth/logout/" role="button" aria-haspopup="true" aria-expanded="false">Logout</a>
+                    {% endif %}
                 </li>
             </ul>
             </div>
