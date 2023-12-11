@@ -93,25 +93,6 @@ def change_item_quantity(request, item_id, quantity_change):
     
     return HttpResponseRedirect('/order/cart')
 
-# @login_required(login_url='userauth:userauth_home')
-# def checkout(request):
-#     user = request.user
-#     items = Item.objects.filter(user=user)
-#     total = total_price(request)
-#     if request.method == 'POST':
-#         if request.POST.get('submit') == 'to_cancel':
-#             return redirect('order:display_cart')
-#         elif request.POST.get('submit') == 'to_checkout':
-#             for item in items:
-#                 item.delete()
-#             return redirect('order:display_cart')
-#     context = {
-#         'items': items,
-#         'user': user,
-#         'total': total,
-#     }
-#     return render(request, 'checkout.html', context)
-
 @login_required(login_url='userauth:userauth_home')
 def checkout(request):
     current_user = UserDataModel.objects.get(id=request.user.id)
@@ -124,7 +105,7 @@ def checkout(request):
 
         with transaction.atomic():
             # Create a new order
-            new_order = Order.objects.create(total_harga=total_price(request), promo_used=bool(selected_promo))
+            new_order = Order.objects.create(total_harga=total_price(request), promo_used=bool(selected_promo), user=current_user)
 
             # Associate items with the new order
             for item in items:
@@ -155,24 +136,27 @@ def checkout(request):
 
     return render(request, 'checkout.html', context)
 
+
 def total_price(request):
     user = request.user
     items = Item.objects.filter(user=user)
     promo = Promo.objects.all()
     total = 0
 
-    # Calculate total without discount first
     for item in items:
         total += item.harga * item.kuantitas
 
-    # Check if there is a valid promo and apply discount
-    if promo.exists():
-        valid_promo = promo.first()  # Considering only one promo exists for simplicity
-
-        # Check if the due date has passed
-        if valid_promo.masa_berlaku >= date.today():
-            # Apply discount if the due date hasn't passed
-            discount_amount = (total * valid_promo.diskon_promo) / 100
-            total -= discount_amount
-
     return total
+
+@login_required(login_url='/userauth/')
+def show_order(request):
+    current_user = UserDataModel.objects.get(id=request.user.id)
+    orders = Order.objects.filter(user=current_user)
+    if orders.count() == 0:
+        exist = False
+    else:
+        exist = True
+    context = {'orders': orders,
+                'exist': exist
+                }
+    return render(request, 'order_history.html', context)
