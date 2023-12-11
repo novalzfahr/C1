@@ -1,7 +1,7 @@
 # ---- Django Imports ----
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from django.http import HttpResponseRedirect
+# from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -9,10 +9,10 @@ from django.core import serializers
 
 # ---- Py Package Imports ----
 # from twilio.rest import Client
-from datetime import datetime
-import smtplib
-import random
-import string
+# from datetime import datetime
+# import smtplib
+# import random
+# import string
 
 # ---- App Imports ----
 from .forms import RegistrationForm, LoginForm, EditEmailForm, EditPhoneNumberForm, EditPasswordForm
