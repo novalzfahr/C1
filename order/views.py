@@ -135,8 +135,8 @@ def total_price(request):
     for item in items:
         total += item.harga*item.kuantitas
     
-    # try:
-    #     total = total - total*promo[0].diskon
-    # except Promo.DoesNotExist:
-    #     pass
+    try:
+        total = total - total*promo[0].diskon_promo
+    except Promo.DoesNotExist:
+        pass
     return total
