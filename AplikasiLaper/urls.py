@@ -20,6 +20,9 @@ from .views import main_page
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('userauth/', include('userauth.urls')),
+    path('', include('orderconfirmation.urls')),
+    path('', include('orderhistory.urls')),
+    path('', include('promo.urls')),
     path('feedback/', include('feedback.urls')),
     path('order/', include('order.urls')),
     path('', main_page, name='main_page'),
