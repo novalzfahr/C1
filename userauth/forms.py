@@ -6,9 +6,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import UserDataModel
 
 class RegistrationForm(forms.ModelForm):
+    password_confirm = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
+
     class Meta:
         model = UserDataModel
-        fields = ['username', 'password', 'role', 'name', 'email', 'phone_number']
+        fields = ['username', 'role', 'name', 'email', 'phone_number', 'password']
         widgets = {
             'password':forms.PasswordInput()
         }
@@ -20,5 +22,23 @@ class LoginForm(AuthenticationForm):
         widgets = {
             'password':forms.PasswordInput()
         }
-    # username = forms.CharField(label='Username')
-    # password = forms.CharField(label='Password', widget=forms.PasswordInput)
+
+class EditEmailForm(forms.ModelForm):
+    class Meta:
+        model = UserDataModel
+        fields = ['email']
+
+class EditPhoneNumberForm(forms.ModelForm):
+    class Meta:
+        model = UserDataModel
+        fields = ['phone_number']
+
+class EditPasswordForm(forms.ModelForm):
+    password_confirm = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
+    
+    class Meta:
+        model = UserDataModel
+        fields = ['password']
+        widgets = {
+            'password':forms.PasswordInput()
+        }
