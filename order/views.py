@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from order.models import *
+from datetime import date
 
 # Create your views here.
 @login_required(login_url='userauth:userauth_home')
@@ -114,6 +115,19 @@ def total_price(request):
     items = Item.objects.filter(user=user)
     promo = Promo.objects.all()
     total = 0
+
+    # Calculate total without discount first
     for item in items:
-        total += item.harga*item.kuantitas
+        total += item.harga * item.kuantitas
+
+    # Check if there is a valid promo and apply discount
+    if promo.exists():
+        valid_promo = promo.first()  # Considering only one promo exists for simplicity
+
+        # Check if the due date has passed
+        if valid_promo.masa_berlaku >= date.today():
+            # Apply discount if the due date hasn't passed
+            discount_amount = (total * valid_promo.diskon_promo) / 100
+            total -= discount_amount
+
     return total
