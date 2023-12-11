@@ -78,42 +78,15 @@
         <h2>Total Pesanan: {{total}}</h2>
     </div>
     <div class="text-center mt-2 mx-5">
-        <!-- Dropdown box for payment options -->
-        <label for="payment-option">Pilih Promo:</label>
-        <div class="d-flex justify-content-center">
-            <select id="payment-option" name="payment-option" class="form-select">
-                <option value="blank"></option>
-                {% for list in promo %}
-                <option value="{{list.ID_promo}}">{{list.nama_promo}}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-    <!-- <div class="text-center mt-2 mx-5">
-        <label for="payment-option">Pilih Metode Pembayaran:</label>
-        <div class="d-flex justify-content-center">
-            <select id="payment-option" name="payment-option" class="form-select">
-                <option value="blank"></option>
-                <option value="bank">Bank</option>
-                <option value="digital-wallet">Dompet Digital</option>
-            </select>
-        </div>
-    </div> -->
-    <!-- <div class="text-center mt-2">
-        <a href="/order/" class="btn btn-success">Tambah Menu lain ke Cart</a>
-    </div>
-    <div class="text-center mt-2">
-        <a href="" class="btn btn-success">Checkout</a>
-    </div> -->
-    <div class="text-center mt-2 mx-5">
-        <!-- Add a form to submit the checkout -->
         <form method="post" action="{% url 'order:checkout' %}">
             {% csrf_token %}
-            <button type="submit" class="btn btn-success">Checkout</button>
+            <div class="text-center mt-2 mx-5">
+                <a href="{% url 'order:checkout' %}" class="btn btn-success">Checkout</a>
+            </div>            
         </form>
     </div>
     <div class="text-center mt-2">
-        <a href="{% url 'order:read-menu' %}" class="btn btn-success">Tambah Menu lain ke Cart</a>
+        <a href="{% url 'order:userauth_home' %}" class="btn btn-success">Tambah Menu lain ke Cart</a>
     </div>
 </body>
 {% endblock content %}
