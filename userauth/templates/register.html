@@ -1,24 +1,40 @@
-<div class = "register">
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class = "register d-flex justify-content-center flex-row">
+    <div class="card-container">
     
-    <h1>Formulir Registrasi</h1>  
+    <h1 class="text-center">Formulir Registrasi</h1>  
 
         <form method="POST">  
             {% csrf_token %}  
             <table>  
                 {{ form.as_table }}  
+            </table>  
+            <table class="d-flex justify-content-center">
+                <tr>
+                    <td><input class="btn btn-success" type="submit" name="submit" value="Daftar"/></td>
+                <tr>
+            </table>
+        </form>
+        <form method="POST">  
+            {% csrf_token %}  
+            <table class="d-flex justify-content-center">
                 <tr>  
-                    <td></td>
-                    <td><input type="submit" name="submit" value="Daftar"/></td>  
+                    <td class="d-flex justify-content-center flex-row"><button type="submit" class="btn btn-warning" name="submit" value="to_cancel">Cancel</button></td>  
                 </tr>  
             </table>  
         </form>
-
-    {% if messages %}  
-        <ul>   
-            {% for message in messages %}  
-                <li>{{ message }}</li>  
-                {% endfor %}  
-        </ul>   
-    {% endif %}
-
-</div>  
+    
+        {% if messages %}  
+            <ul class="d-flex justify-content-center flex-row">   
+                {% for message in messages %}  
+                    <li>{{ message }}</li>  
+                    {% endfor %}  
+            </ul>   
+        {% endif %}
+    
+    </div>  
+    </div>  
+    {% endblock content %}

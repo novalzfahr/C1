@@ -47,7 +47,7 @@ def userauth_home(request):
                 next_page = request.POST.get('next')
                 if next_page:
                     return redirect(next_page)
-                return redirect('userauth:profile_page')
+                return redirect('/')
             except:
                 messages.info(request, 'Username atau Password salah!')
         # elif button_press == 'to_logout':
@@ -59,6 +59,8 @@ def userauth_home(request):
 def register(request):
     form = RegistrationForm()
     if request.method == 'POST':
+        if request.POST.get('submit') == 'to_cancel':
+            return redirect('userauth:userauth_home')
         form = RegistrationForm(request.POST)
         if form.is_valid():
             if request.POST.get('password_confirm') == request.POST.get('password'):
