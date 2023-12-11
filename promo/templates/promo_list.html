@@ -17,8 +17,8 @@
         <td>{{ i.diskon_promo }}%</td>
         <td>{{ i.masa_berlaku }}</td>
         <td>
-            <a href="{% url 'create_promo' %}">Hapus</a>
-            <a href="{% url 'create_promo' %}">Ubah</a>
+            <a href="{% url 'hapus_promo' id=i.ID_promo %}">Hapus</a>
+            <a href="{% url 'ubah_promo' id=i.ID_promo %}">Ubah</a>
         </td>
       </tr>
     {% endfor %}
