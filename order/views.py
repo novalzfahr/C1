@@ -151,11 +151,14 @@ def total_price(request):
 @login_required(login_url='/userauth/')
 def show_order(request):
     current_user = UserDataModel.objects.get(id=request.user.id)
-    orders = Order.objects.filter(user=current_user)
-    if orders.count() == 0:
+    try:
+        orders = Order.objects.filter(user=current_user)
+        if orders.count() == 0:
+            exist = False
+        else:
+            exist = True
+    except:
         exist = False
-    else:
-        exist = True
     context = {'orders': orders,
                 'exist': exist
                 }

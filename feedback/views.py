@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .models import Feedback
@@ -30,11 +30,14 @@ def read_feedback(request):
                    'admin': admin}
         return render(request, 'read_feedback.html', context)
     if current_user.role == 'pelanggan':
-        feedbacks = Feedback.objects.filter(user=request.user)
-        if feedbacks.count() == 0:
+        try:
+            feedbacks = Feedback.objects.filter(user=request.user)
+            if feedbacks.count() == 0:
+                exist = False
+            else:
+                exist = True
+        except:
             exist = False
-        else:
-            exist = True
         admin = False
         context = {'feedbacks': feedbacks,
                    'exist': exist,
