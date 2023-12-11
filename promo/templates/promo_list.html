@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Promo List</h2>
+  <!-- {% if user.is_authenticated and user.is_staff %} -->
+    <a href="{% url 'create_promo' %}">Buat promo baru</a>
+  <!-- {% endif %} -->
+  <table>
+    <tr>
+      <th>Nama</th>
+      <th>Diskon</th>
+      <th>Masa Berlaku</th>
+      <th>Aksi</th>
+    </tr>
+    {% for i in promo %}
+      <tr>
+        <td>{{ i.nama_promo }}</td>
+        <td>{{ i.diskon_promo }}%</td>
+        <td>{{ i.masa_berlaku }}</td>
+        <td>
+            <a href="{% url 'create_promo' %}">Hapus</a>
+            <a href="{% url 'create_promo' %}">Ubah</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}
