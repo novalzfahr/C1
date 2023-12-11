@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block content %}
-<div class = "profile">
+<div class = "profile d-flex justify-content-center flex-row">
+    <div class="card-container">
     <h1>Halo, {{ user.username }}</h1>
     <form method="POST">
         {% csrf_token %}
@@ -22,15 +23,22 @@
                 <td>Contact Number:</td>
                 <td>{{ user.phone_number }}</td>
             </tr>
-            <tr>
+            {% comment %} <tr>
                 <td></td>
                 <td><button type="submit" name="page_switch" value="to_logout">Logout</button></td>
             </tr>
             <tr>
                 <td></td>
                 <td><button type="submit" name="page_switch" value="to_edit">Edit Profile</button></td>
-            </tr>
+            </tr> {% endcomment %}
         </table>  
+        <table class="d-flex justify-content-center">
+            <tr>
+                <td><button type="submit" class="btn btn-success" name="page_switch" value="to_edit">Edit Profile</button></td>
+                <td><button type="submit" class="btn btn-warning" name="page_switch" value="to_logout">Logout</button></td>
+            <tr>
+        </table>
     </form>
+</div>
 </div>
 {% endblock content %}
